@@ -2,9 +2,54 @@
   "version": "1.0.0",
   "id": "@shopgate-project/configurable-banner",
   "components": [
-
+    {
+      "id": "Banners",
+      "type": "portals",
+      "path": "frontend/portals/Banners",
+      "target": "view.content.before"
+    }
   ],
   "configuration": {
+    "banners": {
+      "type": "admin",
+      "destination": "frontend",
+      "default": [
+        {
+          "routePattern": "/category/:categoryId",
+          "ids": ["1115"],
+          "content": {
+            "imageOnlyUrl": "https://data.shopgate.com/merchant_editor_images/16527/wXJDKS0zhpw3keRwPwMJXo6IOKdI5U3KlLyHUjITuhssZKHsqTUSqzvKYqn5FSH5aEErpMmpTeC6OqMHuGMYJJlvXr42o5kjIk9DpV1JStQlZ5EUI0X0l9VNVMOHgRI2"
+          },
+          "link": "/login"
+        },
+        {
+          "routePattern": "/category/:categoryId",
+          "ids": ["1115"],
+          "content": {
+            "cssBackground": "url(https://data.shopgate.com/merchant_editor_images/16527/o2pMAO5tSQ5fR7xb7elH…6MT9NsbM7Ufy7UITsooDXFtOt2hMDi7d7JnUsb16TSQvijn3QZmON1s74z2LaVsjOHGqY3j48j) center/cover",
+            "h2": "FOO <p>bar</p>",
+            "h3": "test BLA blup <p>bar</p>",
+            "textColor": "red"
+          },
+          "link": "/more"
+        },
+        {
+          "routePattern": "/item/:productId",
+          "ids": ["21523"],
+          "content": {
+            "cssBackground": "url(https://data.shopgate.com/merchant_editor_images/16527/o2pMAO5tSQ5fR7xb7elH…6MT9NsbM7Ufy7UITsooDXFtOt2hMDi7d7JnUsb16TSQvijn3QZmON1s74z2LaVsjOHGqY3j48j) center/cover",
+            "h2": "FOO <p>bar</p>",
+            "h3": "test BLA blup <p>bar</p>",
+            "textColor": "red"
+          },
+          "link": "/more"
+        }
+      ],
+      "params": {
+        "label": "Configuration for banners",
+        "type": "json"
+      }
+    }
   },
   "steps": []
 }
