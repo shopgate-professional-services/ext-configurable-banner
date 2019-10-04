@@ -6,7 +6,7 @@ Adds Banner to the top of pages. A banner can be an image, text or text with bac
 
 _Please make sure your images are compressed and optimized to reduce the loadtime_
 
-### banners
+### banners (Array)
 
 `routePatterns (string)`: Pattern of the route where the banner should be shown. 
 Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart` 
@@ -42,6 +42,22 @@ Example:
    "h2": "Line <strong>1</strong>",
    "h3": "Line 2",
 }`
+
+
+`
+banners: [
+{
+  "routePattern": "/category/:categoryId",
+  "ids": [
+    "1115"
+  ],
+  "content": {
+    "imageOnlyUrl": "https://data.shopgate.com/merchant_editor_images/16527/wXJDKS0zhpw3keRwPwMJXo6IOKdI5U3KlLyHUjITuhssZKHsqTUSqzvKYqn5FSH5aEErpMmpTeC6OqMHuGMYJJlvXr42o5kjIk9DpV1JStQlZ5EUI0X0l9VNVMOHgRI2"
+  },
+  "link": "/pages/123"
+},
+]
+`
 
 
 ## About Shopgate
