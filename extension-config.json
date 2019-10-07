@@ -2,9 +2,23 @@
   "version": "1.0.0",
   "id": "@shopgate-project/configurable-banner",
   "components": [
-
+    {
+      "id": "Banners",
+      "type": "portals",
+      "path": "frontend/portals/Banners",
+      "target": "view.content.before"
+    }
   ],
   "configuration": {
+    "banners": {
+      "type": "admin",
+      "destination": "frontend",
+      "default": [],
+      "params": {
+        "label": "Configuration for banners",
+        "type": "json"
+      }
+    }
   },
   "steps": []
 }
