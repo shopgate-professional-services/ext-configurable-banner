@@ -8,6 +8,7 @@ Adds Banner to the top of pages. A banner can be an image, text or text with bac
 - Supports HTML as content
 - Linking
 - Background images, colors, gradients
+- Fetch banners config from external endpoint
 
 ## Demo & Examples
 [See here](demo/index.md)
@@ -17,9 +18,10 @@ Adds Banner to the top of pages. A banner can be an image, text or text with bac
 _Please make sure your images are compressed and optimized to reduce the loadtime_
 
 ### banners (Array)
+Set it to `null` to cause requests configEndpoint url
 
-- `routePatterns (string)`: Pattern of the route where the banner should be shown. 
-Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart` 
+- `routePatterns (string)`: Pattern of the route where the banner should be shown.
+Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `ids (Array)` (optional): Array of Ids for the provided pattern. If omitted it's a wildcard for every Id.
 
@@ -54,6 +56,30 @@ Example:
    "h3": "Line 2",
 }
 ```
+
+### configEndpoint (string)
+Endpoint URL to fetch banners configuration from. Endpoint should return json in a form like this:
+```json
+{
+   "banners": [
+      {
+          "routePattern": "/category/:categoryId",
+          "ids": [
+            "671"
+          ],
+          "content": {
+            "cssBackground": "#000",
+            "h2": "My headline text </br>",
+            "h3": "With a subheadline",
+            "textColor": "white"
+          }
+      }
+   ]
+ }
+```
+
+### configTTL (number)
+TTL in seconds for the fetched banner config
 
 ## About Shopgate
 

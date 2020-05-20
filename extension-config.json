@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "id": "@shopgate-project/configurable-banner",
   "components": [
     {
@@ -7,17 +7,45 @@
       "type": "portals",
       "path": "frontend/portals/Banners",
       "target": "view.content.before"
+    },
+    {
+      "id": "subscribers",
+      "path": "frontend/config/subscriptions.js",
+      "type": "subscribers"
+    },
+    {
+      "id": "config",
+      "path": "frontend/config/reducers.js",
+      "type": "reducers"
     }
   ],
   "configuration": {
     "banners": {
       "type": "admin",
       "destination": "frontend",
-      "default": [],
+      "default": null,
       "params": {
-        "label": "Configuration for banners",
+        "label": "Static configuration for banners (if endpoint is not given)",
         "type": "json"
       }
+    },
+    "configEndpoint": {
+      "type": "admin",
+      "destination": "backend",
+      "params": {
+        "type": "text",
+        "label": "External endpoint (url) to pull banners configuration"
+      },
+      "default": null
+    },
+    "configTTL": {
+      "type": "admin",
+      "destination": "both",
+      "params": {
+        "type": "text",
+        "label": "TTL (sec) to cache configuration"
+      },
+      "default": 3600
     }
   },
   "steps": []
