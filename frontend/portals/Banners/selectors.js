@@ -1,19 +1,26 @@
 import { createSelector } from 'reselect';
 import { getCurrentRoute } from '@shopgate/pwa-common/selectors/router';
 import { hex2bin } from '@shopgate/pwa-common/helpers/data';
-import { banners } from '../../config';
+import { getConfig } from '../../config/selectors';
 
 export const getBannersForCurrentPage = createSelector(
   getCurrentRoute,
-  route => banners.filter(({ routePattern, ids }) => {
-    if (route.pattern !== routePattern) {
-      return false;
+  getConfig,
+  (route, banners) => {
+    if (!banners || !banners.length) {
+      return [];
     }
 
-    if (Array.isArray(ids) && ids.length) {
-      return Object.values(route.params).some(param => ids.includes(hex2bin(param)));
-    }
+    return banners.filter(({ routePattern, ids }) => {
+      if (route.pattern !== routePattern) {
+        return false;
+      }
 
-    return true;
-  })
+      if (Array.isArray(ids) && ids.length) {
+        return Object.values(route.params).some(param => ids.includes(hex2bin(param)));
+      }
+
+      return true;
+    });
+  }
 );
