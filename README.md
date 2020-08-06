@@ -32,24 +32,29 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 - `wrapperStyles (Object)` (optional): css glamor style object that gets applied to wrapper around the banner
 
 - `productSliderIds (Array)` (optional): Array of productsIds for ProductSlider.
+
 Example:
 ```json
- "productSliderIds": [
+{
+  "productSliderIds": [
     "166",
     "640",
     "850"
-],
+  ]
+}
+
 ```
 
 - `slides (Array)` (optional): Array of slides. Each entry represents a slide with same settings for a banner as above. So link, content, wrapperStyles.
 
 Example:
 ```json
-"slides": [
+{
+  "slides": [
     {
       "content": {
         "cssBackground": "#000",
-        "h2": "My headline text </br>",
+        "h2": "My headline text \u003c/br\u003e",
         "h3": "With a subheadline",
         "textColor": "white"
       },
@@ -67,20 +72,23 @@ Example:
       },
       "link": "/foo"
     }
-]
+  ]
+}
 ```
 
 - `sliderSettings (Object)` (optional): Settings for slider
 
 Example:
 ```json
-"sliderSettings": {
+{
+  "sliderSettings": {
     "autoPlay": false,
     "controls": true,
     "indicators": true,
     "loop": false,
     "slidesPerView": 1,
     "freeMode": false
+  }
 }
 ```
 
