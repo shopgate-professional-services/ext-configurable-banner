@@ -2,12 +2,12 @@ import { createSelector } from 'reselect';
 import { getCurrentRoute } from '@shopgate/pwa-common/selectors/router';
 import { hex2bin } from '@shopgate/pwa-common/helpers/data';
 import { getConfig } from '../../config/selectors';
-import { BANNER_POSITION_TOP } from './index';
+import { BANNER_POSITION_TOP } from '../../constants';
 
 export const getBannersForCurrentPage = createSelector(
   getCurrentRoute,
   getConfig,
-  (_, { position }) => position,
+  (_, { position }) => position || BANNER_POSITION_TOP,
   (route, banners, requestedPosition) => {
     if (!banners || !banners.length) {
       return [];

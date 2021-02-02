@@ -1,5 +1,6 @@
 import React from 'react';
-import Banners, { BANNER_POSITION_BOTTOM } from './index';
+import Banners from './index';
+import { BANNER_POSITION_BOTTOM } from '../../constants';
 
 /**
  * Banners component
