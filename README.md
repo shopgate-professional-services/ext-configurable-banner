@@ -20,10 +20,12 @@ _Please make sure your images are compressed and optimized to reduce the loadtim
 ### banners (Array)
 Set it to `null` to cause requests configEndpoint url
 
-- `routePatterns (string)`: Pattern of the route where the banner should be shown.
+- `routePatterns (string)`: Pattern of the route where the banner should be shown. Use `*` to add it to all routes.
 Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `ids (Array)` (optional): Array of Ids for the provided pattern. If omitted it's a wildcard for every Id.
+
+- `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`
 
 - `link (string)` (optional): Link to the page that should be opened. Relative urls will be opened in the app. Absolute in inAppBrowser
 
