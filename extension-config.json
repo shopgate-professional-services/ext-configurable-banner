@@ -1,15 +1,15 @@
 {
-  "version": "1.3.0-rc.1",
+  "version": "1.3.0",
   "id": "@shopgate-project/configurable-banner",
   "components": [
     {
-      "id": "Banners",
+      "id": "BannersTop",
       "type": "portals",
       "path": "frontend/portals/Banners",
       "target": "view.content.before"
     },
     {
-      "id": "Banners",
+      "id": "BannersBottom",
       "type": "portals",
       "path": "frontend/portals/Banners/BannersBottom.jsx",
       "target": "view.content.after"

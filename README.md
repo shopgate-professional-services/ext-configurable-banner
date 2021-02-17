@@ -20,7 +20,7 @@ _Please make sure your images are compressed and optimized to reduce the loadtim
 ### banners (Array)
 Set it to `null` to cause requests configEndpoint url
 
-- `routePatterns (string)`: Pattern of the route where the banner should be shown. Use `*` to add it to all routes.
+- `routePattern (string)`: Pattern of the route where the banner should be shown. Use `*` to add it to all routes.
 Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `ids (Array)` (optional): Array of Ids for the provided pattern. If omitted it's a wildcard for every Id.
