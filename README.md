@@ -20,14 +20,71 @@ _Please make sure your images are compressed and optimized to reduce the loadtim
 ### banners (Array)
 Set it to `null` to cause requests configEndpoint url
 
-- `routePatterns (string)`: Pattern of the route where the banner should be shown.
+- `routePattern (string)`: Pattern of the route where the banner should be shown. Use `*` to add it to all routes.
 Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `ids (Array)` (optional): Array of Ids for the provided pattern. If omitted it's a wildcard for every Id.
 
+- `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`
+
 - `link (string)` (optional): Link to the page that should be opened. Relative urls will be opened in the app. Absolute in inAppBrowser
 
 - `content (Object)`: Object for the content for the banner. It can look like option A or B
+
+- `wrapperStyles (Object)` (optional): css glamor style object that gets applied to wrapper around the banner
+
+- `productSliderIds (Array)` (optional): Array of productsIds for ProductSlider.
+Example:
+```json
+ "productSliderIds": [
+    "166",
+    "640",
+    "850"
+],
+```
+
+- `slides (Array)` (optional): Array of slides. Each entry represents a slide with same settings for a banner as above. So link, content, wrapperStyles.
+
+Example:
+```json
+"slides": [
+    {
+      "content": {
+        "cssBackground": "#000",
+        "h2": "My headline text </br>",
+        "h3": "With a subheadline",
+        "textColor": "white"
+      },
+      "wrapperStyles": {
+        "margin": "20px"
+      },
+      "link": "/cart"
+    },
+    {
+      "content": {
+        "imageOnlyUrl": "https://cdn.img.com/image1.jpg"
+      },
+      "wrapperStyles": {
+        "margin": "10px"
+      },
+      "link": "/foo"
+    }
+]
+```
+
+- `sliderSettings (Object)` (optional): Settings for slider
+
+Example:
+```json
+"sliderSettings": {
+    "autoPlay": false,
+    "controls": true,
+    "indicators": true,
+    "loop": false,
+    "slidesPerView": 1,
+    "freeMode": false
+}
+```
 
 **Option A**
 

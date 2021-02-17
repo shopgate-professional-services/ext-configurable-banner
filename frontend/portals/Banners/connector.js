@@ -3,10 +3,11 @@ import { getBannersForCurrentPage } from './selectors';
 
 /**
  * @param {Object} state state
+ * @param {Object} props props
  * @returns {Object}
  */
-const mapStateToProps = state => ({
-  banners: getBannersForCurrentPage(state),
+const mapStateToProps = (state, props) => ({
+  banners: getBannersForCurrentPage(state, props),
 });
 
 export default connect(mapStateToProps);
