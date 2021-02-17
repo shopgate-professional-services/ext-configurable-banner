@@ -69,7 +69,7 @@ const Banner = ({
     }
 
     fetchProductsById(productSliderIds);
-  }, [productSliderIds]);
+  }, [fetchProductsById, productSliderIds]);
 
   // Show ProductSlider as Banner
   if (productSliderIds && productSliderIds.length) {
@@ -89,7 +89,7 @@ const Banner = ({
           <Swiper.Item key={index}>
             {buildSlideContent(slide.wrapperStyles, slide.content, slide.link)}
           </Swiper.Item>
-          ))}
+        ))}
       </Swiper>
     );
   }
