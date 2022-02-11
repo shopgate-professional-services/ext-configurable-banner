@@ -18,12 +18,12 @@ export const getBannersForCurrentPage = createSelector(
         return false;
       }
 
-      if (Array.isArray(ids) && ids.length) {
-        return Object.values(route.params).some(param => ids.includes(hex2bin(param)));
-      }
-
       if (requestedPosition !== position) {
         return false;
+      }
+
+      if (Array.isArray(ids) && ids.length) {
+        return Object.values(route.params).some(param => ids.includes(hex2bin(param)));
       }
 
       return true;
