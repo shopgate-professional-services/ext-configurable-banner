@@ -72,7 +72,6 @@
  ```
 
 ## Slider
-![](img.png)
 
 **Config**
 ```json
