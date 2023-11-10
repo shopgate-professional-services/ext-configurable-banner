@@ -70,3 +70,57 @@
    ]
  }
  ```
+
+## Slider
+![](img.png)
+
+**Config**
+```json
+{
+  "banners": [
+    {
+      "slides": [
+        {
+          "link": null,
+          "content": {
+            "imageOnlyUrl": "https://cdn.mey.com/media/email/slider_schwarz_1200x100px_de_01.jpg"
+          },
+          "wrapperStyles": {}
+        },
+        {
+          "link": null,
+          "content": {
+            "imageOnlyUrl": "https://cdn.mey.com/media/email/slider_schwarz_1200x100px_de_02.jpg"
+          },
+          "wrapperStyles": {}
+        },
+        {
+          "link": null,
+          "content": {
+            "imageOnlyUrl": "https://cdn.mey.com/media/email/slider_schwarz_1200x100px_de_03.jpg"
+          },
+          "wrapperStyles": {}
+        },
+        {
+          "link": null,
+          "content": {
+            "imageOnlyUrl": "https://cdn.mey.com/media/email/slider_schwarz_1200x100px_de_04.jpg"
+          },
+          "wrapperStyles": {}
+        }
+      ],
+      "routePattern": "/",
+      "sliderSettings": {
+          "loop": true,
+          "autoPlay": true,
+          "controls": false,
+          "freeMode": false,
+          "indicators": false,
+          "slidesPerView": 1
+      }
+    }
+  ],
+  "configTTL": 3600,
+  "configEndpoint": null
+}
+ ```
