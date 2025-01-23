@@ -10,7 +10,7 @@ import connect from './connector';
  * @param {Object} wrapperStyles wrapperStyles
  * @param {Object} contentConfig contentConfig
  * @param {string} link link
- * @returns {JSX}
+ * @returns {JSX.Element}
  */
 const buildSlideContent = (wrapperStyles, contentConfig, link) => {
   let content = null;
@@ -20,10 +20,11 @@ const buildSlideContent = (wrapperStyles, contentConfig, link) => {
     h2,
     textColor,
     cssBackground,
+    altText,
   } = contentConfig;
 
   if (imageOnlyUrl) {
-    content = (<img src={imageOnlyUrl} className={css(wrapperStyles)} alt="" />);
+    content = (<img src={imageOnlyUrl} className={css(wrapperStyles)} alt={altText || ''} />);
   } else if (h3 || h2) {
     content = (
       <div className={`${styles.wrapper(cssBackground, textColor)} ${css(wrapperStyles)}`}>
@@ -50,7 +51,7 @@ const buildSlideContent = (wrapperStyles, contentConfig, link) => {
 
 /**
  * Banner component
- * @return {JSX}
+ * @return {JSX.Element}
  */
 const Banner = ({
   content: contentConfig,
