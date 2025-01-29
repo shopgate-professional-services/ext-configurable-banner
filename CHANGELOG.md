@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.3] 2025-01-29
+- ## Added
+- topmost position for banner
+- support for vertical scrolling
+
 ## [1.3.2] 2022-06-09
 - Fixed bug where top banner was positioned top and bottom
 

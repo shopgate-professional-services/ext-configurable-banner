@@ -77,6 +77,7 @@ Example:
 ```
 
 - `sliderSettings (Object)` (optional): Settings for slider
+- see https://v9.swiperjs.com/swiper-api#parameters for possible slider parameters
 
 Example:
 ```json
@@ -88,7 +89,6 @@ Example:
     "loop": false,
     "slidesPerView": 1,
     "freeMode": false,
-    "direction": "vertical",
     "autoHeight": true,
     "style": {
       "marginBottom": 10
