@@ -1,4 +1,6 @@
-import React, { useEffect } from 'react';
+import React, {
+  useEffect, useRef, useCallback, useMemo,
+} from 'react';
 import PropTypes from 'prop-types';
 import { css } from 'glamor';
 import { useTheme } from '@shopgate/engage/core';
@@ -64,6 +66,16 @@ const Banner = ({
 }) => {
   const { ProductSlider } = useTheme();
 
+  const sliderIsVertical = useMemo(() => {
+    if (!Array.isArray(slides) || !slides.length || !sliderSettings) {
+      return false;
+    }
+
+    return sliderSettings.direction === 'vertical';
+  }, [sliderSettings, slides]);
+
+  const sliderRef = useRef(null);
+
   useEffect(() => {
     if (!(productSliderIds && productSliderIds.length)) {
       return;
@@ -72,18 +84,57 @@ const Banner = ({
     fetchProductsById(productSliderIds);
   }, [fetchProductsById, productSliderIds]);
 
+  /**
+   * Callback that updates the height of the Swiper slider based on the height of the current slide.
+   * This is only needed for vertical sliders since Swiper doesn't seem to support this out of the
+   * box.
+   */
+  const updateSwiperHeight = useCallback(() => {
+    if (!sliderRef.current) return;
+    const slider = sliderRef.current.el;
+    const currentSlide = sliderRef.current.slides[sliderRef.current.activeIndex];
+    const currentSlideItem = currentSlide.children[0];
+
+    requestAnimationFrame(() => {
+      slider.style.height = `${currentSlideItem.clientHeight}px`;
+    });
+  }, []);
+
+  /**
+   * Effect that registers a ResizeObserver that updates the height of the Swiper slider when the
+   * body element resizes. This is only needed for vertical sliders.
+   */
+  useEffect(() => {
+    if (!sliderIsVertical) return undefined;
+
+    const observer = new ResizeObserver(() => {
+      updateSwiperHeight();
+    });
+
+    observer.observe(document.querySelector('body'));
+
+    // Cleanup function
+    return () => {
+      observer.disconnect();
+    };
+  }, [sliderIsVertical, sliderSettings, updateSwiperHeight]);
+
   // Show ProductSlider as Banner
   if (productSliderIds && productSliderIds.length) {
     return (
       <ProductSlider className={css(wrapperStyles).toString()} productIds={productSliderIds} />
     );
   }
-
   // Show slider as banner
   if (slides && slides.length) {
     return (
       <Swiper
         {...sliderSettings}
+        onInit={(swiper) => {
+          if (sliderIsVertical) {
+            sliderRef.current = swiper;
+          }
+        }}
       >
         {slides.map((slide, index) => (
           // eslint-disable-next-line react/no-array-index-key
