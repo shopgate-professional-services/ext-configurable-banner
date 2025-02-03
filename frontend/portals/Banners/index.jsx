@@ -5,7 +5,7 @@ import Banner from './Banner';
 
 /**
  * Banners component
- * @return {JSX}
+ * @return {JSX.Element}
  */
 const Banners = ({ banners }) => {
   if (!banners.length) {

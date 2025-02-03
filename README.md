@@ -1,6 +1,6 @@
 # Shopgate Connect - configurable banner
 
-Adds Banner to the top of pages. A banner can be an image, text or text with background image. Linking is possible.
+Adds one or multiple banners to top or bottom of the pages. A banner can be an image, text or text with background image. Linking is possible.
 
 ## Features
 - Multiple banners per page
@@ -25,7 +25,7 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `ids (Array)` (optional): Array of Ids for the provided pattern. If omitted it's a wildcard for every Id.
 
-- `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`
+- `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`, `topmost`
 
 - `link (string)` (optional): Link to the page that should be opened. Relative urls will be opened in the app. Absolute in inAppBrowser
 
@@ -36,18 +36,21 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 - `productSliderIds (Array)` (optional): Array of productsIds for ProductSlider.
 Example:
 ```json
- "productSliderIds": [
+{
+  "productSliderIds": [
     "166",
     "640",
     "850"
-],
+  ]
+}
 ```
 
 - `slides (Array)` (optional): Array of slides. Each entry represents a slide with same settings for a banner as above. So link, content, wrapperStyles.
 
 Example:
 ```json
-"slides": [
+{
+  "slides": [
     {
       "content": {
         "cssBackground": "#000",
@@ -69,20 +72,28 @@ Example:
       },
       "link": "/foo"
     }
-]
+  ]
+}
 ```
 
 - `sliderSettings (Object)` (optional): Settings for slider
+- see https://v9.swiperjs.com/swiper-api#parameters for possible slider parameters
 
 Example:
 ```json
-"sliderSettings": {
+{
+  "sliderSettings": {
     "autoPlay": false,
     "controls": true,
     "indicators": true,
     "loop": false,
     "slidesPerView": 1,
-    "freeMode": false
+    "freeMode": false,
+    "autoHeight": true,
+    "style": {
+      "marginBottom": 10
+    }
+  }
 }
 ```
 
@@ -92,8 +103,10 @@ Example:
 
 Example:
 ```json
-"content": {
-   "imageOnlyUrl": "https://cdn.img.com/image1.jpg"
+{
+  "content": {
+    "imageOnlyUrl": "https://cdn.img.com/image1.jpg"
+  }
 }
 ```
 
@@ -106,11 +119,13 @@ Example:
 
 Example:
 ```json
-"content": {
-   "cssBackground": "#000",
-   "textColor": "#fff"
-   "h2": "Line <strong>1</strong>",
-   "h3": "Line 2",
+{
+  "content": {
+    "cssBackground": "#000",
+    "textColor": "#fff",
+    "h2": "Line <strong>1</strong>",
+    "h3": "Line 2"
+  }
 }
 ```
 
