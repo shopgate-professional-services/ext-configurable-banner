@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.1] 2025-02-03
+### Changed
+- changed portal position for "topmost" position of the banner (needs PWA >= 7.23.6)
+
 ## [1.4.0] 2025-01-29
 ### Added
 - topmost position for banner
