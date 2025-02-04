@@ -6,7 +6,7 @@
       "id": "BannersTopmost",
       "type": "portals",
       "path": "frontend/portals/Banners/BannersTopmost.jsx",
-      "target": "app-bar.default.before"
+      "target": "app-bar.content.before"
     },
     {
       "id": "BannersTop",

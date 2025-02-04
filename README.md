@@ -71,13 +71,25 @@ Example:
         "margin": "10px"
       },
       "link": "/foo"
+    },
+    {
+      "content": {
+        "cssBackground": "#000",
+        "imageWrappedUrl": "https://cdn.img.com/image1.jpg"
+      },
+      "wrapperStyles": {
+        "height": "100%",
+        "display": "flex",
+        "justifyContent": "center"
+      },
+      "link": "/foo"
     }
   ]
 }
 ```
 
 - `sliderSettings (Object)` (optional): Settings for slider
-- see https://v9.swiperjs.com/swiper-api#parameters for possible slider parameters
+- see https://swiperjs.com/swiper-api#parameters for possible slider parameters
 
 Example:
 ```json
@@ -111,6 +123,25 @@ Example:
 ```
 
 **Option B**
+
+- `imageWrappedUrl (string)`: Url of the image that should be shown. Image is wrapped with a container that
+can be styled via `wrapperStyles` object.
+
+Example:
+```json
+{
+  "content": {
+    "imageWrappedUrl": "https://cdn.img.com/image1.jpg"
+  },
+  "wrapperStyles": {
+    "height": "100%",
+    "display": "flex",
+    "justifyContent": "center"
+  }
+}
+```
+
+**Option C**
 
 - `h2` (optional): Headline H2 of the header. You can use html markup here like `<br>` to force a line break.
 - `h3` (optional): Headline H3 of the header. You can use html markup here like `<br>` to force a line break
