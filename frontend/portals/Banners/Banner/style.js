@@ -23,13 +23,8 @@ const h2 = css({
   marginTop: 0,
 });
 
-const verticalSlide = css({
-  height: 'auto !important',
-}).toString();
-
 export default {
   wrapper,
   h2,
   h3,
-  verticalSlide,
 };

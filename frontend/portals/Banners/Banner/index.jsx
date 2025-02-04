@@ -1,6 +1,4 @@
-import React, {
-  useEffect, useMemo,
-} from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { css } from 'glamor';
 import { useTheme } from '@shopgate/engage/core';
@@ -18,6 +16,7 @@ const buildSlideContent = (wrapperStyles, contentConfig, link) => {
   let content = null;
   const {
     imageOnlyUrl,
+    imageWrappedUrl,
     h3,
     h2,
     textColor,
@@ -27,6 +26,16 @@ const buildSlideContent = (wrapperStyles, contentConfig, link) => {
 
   if (imageOnlyUrl) {
     content = (<img src={imageOnlyUrl} className={css(wrapperStyles)} alt={altText || ''} />);
+  } else if (imageWrappedUrl) {
+    content = (
+      <div className={css(
+        wrapperStyles,
+        { ...cssBackground ? { backgroundColor: cssBackground } : {} }
+      )}
+      >
+        {imageWrappedUrl && (<img src={imageWrappedUrl} alt={altText || ''} />)}
+      </div>
+    );
   } else if (h3 || h2) {
     content = (
       <div className={`${styles.wrapper(cssBackground, textColor)} ${css(wrapperStyles)}`}>
@@ -66,14 +75,6 @@ const Banner = ({
 }) => {
   const { ProductSlider } = useTheme();
 
-  const sliderIsVertical = useMemo(() => {
-    if (!Array.isArray(slides) || !slides.length || !sliderSettings) {
-      return false;
-    }
-
-    return sliderSettings.direction === 'vertical';
-  }, [sliderSettings, slides]);
-
   useEffect(() => {
     if (!(productSliderIds && productSliderIds.length)) {
       return;
@@ -96,7 +97,7 @@ const Banner = ({
       >
         {slides.map((slide, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <Swiper.Item key={index} className={sliderIsVertical ? styles.verticalSlide : ''}>
+          <Swiper.Item key={index}>
             {buildSlideContent(slide.wrapperStyles, slide.content, slide.link)}
           </Swiper.Item>
         ))}
