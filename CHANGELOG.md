@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.4.2] 2025-02-28
+### Added
+- Improved accessibility: made link in banner accessible to screen readers
+
 ## [1.4.1] 2025-02-03
 ### Added
 - Introduced new `imageWrappedUrl` property for the `content` section of slides. It accepts an image url as
