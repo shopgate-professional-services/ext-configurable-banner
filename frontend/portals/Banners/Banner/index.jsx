@@ -51,7 +51,7 @@ const buildSlideContent = (wrapperStyles, contentConfig, link) => {
 
   if (link) {
     return (
-      <Link href={link}>
+      <Link href={link} aria-label={altText} tabIndex={0}>
         {content}
       </Link>
     );

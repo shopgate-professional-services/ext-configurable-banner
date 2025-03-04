@@ -29,7 +29,7 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `link (string)` (optional): Link to the page that should be opened. Relative urls will be opened in the app. Absolute in inAppBrowser
 
-- `content (Object)`: Object for the content for the banner. It can look like option A or B
+- `content (Object)`: Object for the content for the banner. It can look like option A, B or C.
 
 - `wrapperStyles (Object)` (optional): css glamor style object that gets applied to wrapper around the banner
 
@@ -65,7 +65,8 @@ Example:
     },
     {
       "content": {
-        "imageOnlyUrl": "https://cdn.img.com/image1.jpg"
+        "imageOnlyUrl": "https://cdn.img.com/image1.jpg",
+        "altText": "Description of the image for screen readers"
       },
       "wrapperStyles": {
         "margin": "10px"
@@ -75,7 +76,8 @@ Example:
     {
       "content": {
         "cssBackground": "#000",
-        "imageWrappedUrl": "https://cdn.img.com/image1.jpg"
+        "imageWrappedUrl": "https://cdn.img.com/image1.jpg",
+        "altText": "Description of the image for screen readers"
       },
       "wrapperStyles": {
         "height": "100%",
@@ -112,12 +114,14 @@ Example:
 **Option A**
 
 - `imageOnlyUrl (string)`: Url of the image that should be shown
+- `altText (string)`: A descriptive text for the image, providing context for screen readers to improve accessibility for visually impaired users.
 
 Example:
 ```json
 {
   "content": {
-    "imageOnlyUrl": "https://cdn.img.com/image1.jpg"
+    "imageOnlyUrl": "https://cdn.img.com/image1.jpg",
+    "altText": "Description of the image for screen readers"
   }
 }
 ```
@@ -126,12 +130,14 @@ Example:
 
 - `imageWrappedUrl (string)`: Url of the image that should be shown. Image is wrapped with a container that
 can be styled via `wrapperStyles` object.
+- `altText (string)`: A descriptive text for the image, providing context for screen readers to improve accessibility for visually impaired users.
 
 Example:
 ```json
 {
   "content": {
-    "imageWrappedUrl": "https://cdn.img.com/image1.jpg"
+    "imageWrappedUrl": "https://cdn.img.com/image1.jpg",
+    "altText": "Description of the image for screen readers"
   },
   "wrapperStyles": {
     "height": "100%",
