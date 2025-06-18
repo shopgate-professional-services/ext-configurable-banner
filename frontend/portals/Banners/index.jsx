@@ -1,5 +1,6 @@
 import React, { useRef, useState, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 import { ScrollHeader } from '@shopgate/engage/components';
 import { css } from 'glamor';
 import connect from './connector';
@@ -28,11 +29,6 @@ const Banners = ({ banners }) => {
    * Define styles for ScrollHeader
    * This is within the component to have the height from the banner ref available
    */
-
-  const root = css({
-    overflow: 'hidden',
-  });
-
   const scrolledIn = css({
     '&&': {
       transform: 'translateY(0%)',
@@ -47,12 +43,12 @@ const Banners = ({ banners }) => {
     },
   });
 
-  const transition = css({
+  const scrollHeaderStyle = css({
     transition: 'transform 0.2s ease,transform 0.2s, margin-bottom 0.2s ease',
   });
 
-  const background = css({
-    backgroundColor: 'red',
+  const overflowWrapper = css({
+    overflow: 'hidden',
   });
 
   return (
@@ -64,16 +60,16 @@ const Banners = ({ banners }) => {
           // eslint-disable-next-line react/no-array-index-key
           return <Banner key={index} {...banner} />;
         }
+
         return (
           // eslint-disable-next-line react/no-array-index-key
-          <div key={index} className={css({ overflow: 'hidden' })}>
+          <div key={index} className={overflowWrapper}>
             <ScrollHeader
               hideOnScroll
+              className={classNames(scrollHeaderStyle)}
               classes={{
-                scrolledIn: hideOnScroll ? scrolledIn : '',
-                scrolledOut: hideOnScroll ? scrolledOut : '',
-                transition: hideOnScroll ? transition : '',
-                root: hideOnScroll ? root : background,
+                scrolledIn,
+                scrolledOut,
               }}
             >
               <div ref={bannerRef}>
