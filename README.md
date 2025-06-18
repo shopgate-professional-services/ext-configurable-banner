@@ -21,9 +21,9 @@ _Please make sure your images are compressed and optimized to reduce the loadtim
 Set it to `null` to cause requests configEndpoint url
 
 - `routePattern (string)`: Pattern of the route where the banner should be shown. Use `*` to add it to all routes.
-Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
+Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`, `/page/:pageId`
 
-- `ids (Array)` (optional): Array of Ids for the provided pattern. If omitted it's a wildcard for every Id.
+- `ids (Array)` (optional): Array of Ids for the provided pattern. If omitted it's a wildcard for every Id. For CMS routes using slug-based URLs (e.g. `/page/shipping-information`), this array should contain the expected page key instead of Ids, e.g. `["shipping-information"]`.
 
 - `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`, `topmost`
 
