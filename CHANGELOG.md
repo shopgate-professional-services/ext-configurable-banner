@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [1.6.0] 2025-06-18
+### Added
+- Add "hideOnScroll" option to config, which hides the topmost banner when the user scrolls down
+
 ## [1.5.0] 2025-02-28
 ### Added
 - Improved accessibility: made link in banner accessible to screen readers
