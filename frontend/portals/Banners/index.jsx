@@ -5,6 +5,12 @@ import { ScrollHeader } from '@shopgate/engage/components';
 import { css } from 'glamor';
 import connect from './connector';
 import Banner from './Banner';
+import {
+  scrolledIn,
+  scrolledOut,
+  scrollHeaderStyle,
+  overflowWrapper,
+} from './style';
 
 /**
  * Banners component
@@ -25,32 +31,6 @@ const Banners = ({ banners }) => {
     return null;
   }
 
-  /**
-   * Define styles for ScrollHeader
-   * This is within the component to have the height from the banner ref available
-   */
-  const scrolledIn = css({
-    '&&': {
-      transform: 'translateY(0%)',
-      marginBottom: 0,
-    },
-  });
-
-  const scrolledOut = css({
-    '&&': {
-      transform: 'translateY(-250%)',
-      marginBottom: -bannerHeight,
-    },
-  });
-
-  const scrollHeaderStyle = css({
-    transition: 'transform 0.2s ease,transform 0.2s, margin-bottom 0.2s ease',
-  });
-
-  const overflowWrapper = css({
-    overflow: 'hidden',
-  });
-
   return (
     <div>
       {banners.map((banner, index) => {
@@ -69,7 +49,11 @@ const Banners = ({ banners }) => {
               className={classNames(scrollHeaderStyle)}
               classes={{
                 scrolledIn,
-                scrolledOut,
+                scrolledOut: classNames(scrolledOut, css({
+                  '&&': {
+                    marginBottom: -bannerHeight,
+                  },
+                })),
               }}
             >
               <div ref={bannerRef}>
