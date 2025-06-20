@@ -27,6 +27,9 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`, `topmost`
 
+- `hideOnScroll (boolean)` (optional): If true, the banner will be hidden when scrolling down and
+shown again when scrolling up. Default is `false`. Only works if `position` is `topmost`.
+
 - `link (string)` (optional): Link to the page that should be opened. Relative urls will be opened in the app. Absolute in inAppBrowser
 
 - `content (Object)`: Object for the content for the banner. It can look like option A, B or C.
@@ -104,6 +107,7 @@ Example:
     "slidesPerView": 1,
     "freeMode": false,
     "autoHeight": true,
+    "allowTouchMove": true,
     "style": {
       "marginBottom": 10
     }
