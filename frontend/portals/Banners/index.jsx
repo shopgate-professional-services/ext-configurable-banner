@@ -45,6 +45,7 @@ const Banners = ({ banners }) => {
           // eslint-disable-next-line react/no-array-index-key
           <div key={index} className={overflowWrapper}>
             <ScrollHeader
+              ref={bannerRef}
               hideOnScroll
               className={classNames(scrollHeaderStyle)}
               classes={{
@@ -56,9 +57,7 @@ const Banners = ({ banners }) => {
                 })),
               }}
             >
-              <div ref={bannerRef}>
-                <Banner {...banner} />
-              </div>
+              <Banner {...banner} />
             </ScrollHeader>
           </div>
         );

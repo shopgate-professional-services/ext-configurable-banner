@@ -107,6 +107,7 @@ Example:
     "slidesPerView": 1,
     "freeMode": false,
     "autoHeight": true,
+    "allowTouchMove": true,
     "style": {
       "marginBottom": 10
     }
