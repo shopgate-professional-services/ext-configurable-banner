@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 ## [1.6.0] 2025-06-18
 ### Added
-- Add "hideOnScroll" option to config, which hides the topmost banner when the user scrolls down
+- Add "hideOnScroll" option to config, which hides the topmost banner when the user scrolls down (needs PWA >= 7.27.2)
 ### Fixed
 - Fixed banner matching for CMS page routes using slug-based parameters
 
