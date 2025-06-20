@@ -5,7 +5,7 @@ export const scrolledIn = css({
     transform: 'translateY(0%)',
     marginBottom: 0,
   },
-});
+}).toString();
 
 export const scrolledOut = css({
   '&&': {
