@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## 1.6.1 2025-06-20
+### Changed
+- Banners on `topmost` position with `hideOnScroll` active are not shown till user scrolled back to top again
+
 ## [1.6.0] 2025-06-18
 ### Added
 - Add "hideOnScroll" option to config, which hides the topmost banner when the user scrolls down (needs PWA >= 7.27.2)
