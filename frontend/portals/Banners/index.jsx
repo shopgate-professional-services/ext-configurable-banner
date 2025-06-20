@@ -47,6 +47,7 @@ const Banners = ({ banners }) => {
             <ScrollHeader
               ref={bannerRef}
               hideOnScroll
+              onlyShowAtTop
               className={classNames(scrollHeaderStyle)}
               classes={{
                 scrolledIn,
