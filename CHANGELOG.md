@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Changed
+- Position `topmost`: the first banner with a background of its own (text or wrapped image) reaches into the status bar area, so the status bar takes the color of the banner. Image only banners, sliders and product sliders start below the status bar.
+- Position `top`: on pages with the floating header of PWA 7.34 the banners start below the header and the search bar.
+### Fixed
+- The height of a banner with `hideOnScroll` is measured again when the banner resizes or renders later.
+- `wrapperStyles` always win over the default styles of text banners.
+
 ## 1.6.1 2025-06-20
 ### Changed
 - Banners on `topmost` position with `hideOnScroll` active are not shown till user scrolled back to top again

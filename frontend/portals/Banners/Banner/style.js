@@ -23,7 +23,16 @@ const h2 = css({
   marginTop: 0,
 });
 
+const belowStatusBar = css({
+  '::before': {
+    content: '""',
+    display: 'block',
+    height: 'var(--safe-area-inset-top, 0px)',
+  },
+}).toString();
+
 export default {
+  belowStatusBar,
   wrapper,
   h2,
   h3,

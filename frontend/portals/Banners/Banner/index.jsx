@@ -10,9 +10,10 @@ import connect from './connector';
  * @param {Object} wrapperStyles wrapperStyles
  * @param {Object} contentConfig contentConfig
  * @param {string} link link
+ * @param {string} headerClass Class that keeps the banner clear of the status bar
  * @returns {JSX.Element}
  */
-const buildSlideContent = (wrapperStyles, contentConfig, link) => {
+const buildSlideContent = (wrapperStyles, contentConfig, link, headerClass = '') => {
   let content = null;
   const {
     imageOnlyUrl,
@@ -28,17 +29,17 @@ const buildSlideContent = (wrapperStyles, contentConfig, link) => {
     content = (<img src={imageOnlyUrl} className={css(wrapperStyles)} alt={altText || ''} />);
   } else if (imageWrappedUrl) {
     content = (
-      <div className={css(
+      <div className={`${css(
         wrapperStyles,
         { ...cssBackground ? { backgroundColor: cssBackground } : {} }
-      )}
+      )} ${headerClass}`}
       >
         {imageWrappedUrl && (<img src={imageWrappedUrl} alt={altText || ''} />)}
       </div>
     );
   } else if (h3 || h2) {
     content = (
-      <div className={`${styles.wrapper(cssBackground, textColor)} ${css(wrapperStyles)}`}>
+      <div className={`${css(styles.wrapper(cssBackground, textColor), wrapperStyles)} ${headerClass}`}>
         {h2 && (<h2 className={styles.h2} dangerouslySetInnerHTML={{ __html: h2 }} />)}
         {h3 && (<h3 className={styles.h3} dangerouslySetInnerHTML={{ __html: h3 }} />)}
       </div>
@@ -72,7 +73,9 @@ const Banner = ({
   sliderSettings,
   productSliderIds,
   fetchProductsById,
+  belowStatusBar,
 }) => {
+  const headerClass = belowStatusBar ? styles.belowStatusBar : '';
   const { ProductSlider } = useTheme();
 
   useEffect(() => {
@@ -106,11 +109,12 @@ const Banner = ({
   }
 
   // Show banner as simple box
-  return buildSlideContent(wrapperStyles, contentConfig, link);
+  return buildSlideContent(wrapperStyles, contentConfig, link, headerClass);
 };
 
 Banner.propTypes = {
   fetchProductsById: PropTypes.func.isRequired,
+  belowStatusBar: PropTypes.bool,
   content: PropTypes.shape(),
   link: PropTypes.string,
   sliderSettings: PropTypes.shape(),
@@ -119,6 +123,7 @@ Banner.propTypes = {
 };
 
 Banner.defaultProps = {
+  belowStatusBar: false,
   content: {},
   link: null,
   wrapperStyles: {},
