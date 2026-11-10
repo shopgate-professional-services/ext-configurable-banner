@@ -1,11 +1,13 @@
 import React, { useState, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { useRoute } from '@shopgate/engage/core';
 import { ScrollHeader } from '@shopgate/engage/components';
 import { css } from 'glamor';
 import connect from './connector';
 import Banner from './Banner';
 import { BANNER_POSITION_TOPMOST } from '../../constants';
+import { getBannerBackground } from './helpers';
 import {
   scrolledIn,
   scrolledOut,
@@ -13,15 +15,59 @@ import {
   overflowWrapper,
   topContainer,
   topmostContainer,
+  SEARCH_BAR_HEIGHT_PROP,
 } from './style';
+
+/**
+ * Keeps the largest height the floating search bar had while the page was visible. The PWA sets
+ * the visible height only, which drops to 0 while the bar hides on scroll. Following it would
+ * move the page content up and down while scrolling.
+ * @param {boolean} active Whether to track the height.
+ * @returns {number}
+ */
+const useFloatingSearchBarHeight = (active) => {
+  const [height, setHeight] = useState(0);
+
+  useLayoutEffect(() => {
+    if (!active) {
+      return undefined;
+    }
+
+    const root = document.documentElement;
+    /** Reads the current height of the floating search bar. */
+    const update = () => {
+      const value = parseFloat(
+        getComputedStyle(root).getPropertyValue('--sg-search-bar-floating-height')
+      ) || 0;
+      setHeight(current => Math.max(current, value));
+    };
+
+    update();
+
+    if (typeof MutationObserver !== 'function') {
+      return undefined;
+    }
+
+    const observer = new MutationObserver(update);
+    observer.observe(root, {
+      attributes: true,
+      attributeFilter: ['style'],
+    });
+    return () => observer.disconnect();
+  }, [active]);
+
+  return height;
+};
 
 /**
  * Banners component
  * @return {JSX.Element}
  */
 const Banners = ({ banners, position }) => {
+  const { visible = true } = useRoute() || {};
   const [bannerElement, setBannerElement] = useState(null);
   const [bannerHeight, setBannerHeight] = useState(0);
+  const searchBarHeight = useFloatingSearchBarHeight(!position && visible && banners.length > 0);
 
   // Set the height of the banner to adjust the ScrollHeader animation
   useLayoutEffect(() => {
@@ -44,21 +90,33 @@ const Banners = ({ banners, position }) => {
     return null;
   }
 
-  const isTopmost = position === BANNER_POSITION_TOPMOST;
-  // Only banners with a background of their own can color the status bar. An image, a slider or a
-  // product slider starts below it.
+  // Only a banner with a background of its own colors the status bar. An image, a slider or a
+  // product slider starts below it. The status bar part stays reserved while a banner with
+  // hideOnScroll is hidden, so the header keeps its place.
   const firstContent = banners[0].content || {};
-  const reachesStatusBar = isTopmost
+  const reachesStatusBar = position === BANNER_POSITION_TOPMOST
     && !(banners[0].slides && banners[0].slides.length)
     && !(banners[0].productSliderIds && banners[0].productSliderIds.length)
     && !firstContent.imageOnlyUrl
-    && !!(firstContent.imageWrappedUrl || firstContent.h2 || firstContent.h3);
-  const containerClass = !position ? topContainer : undefined;
+    && !!(firstContent.imageWrappedUrl || firstContent.h2 || firstContent.h3)
+    && !!getBannerBackground(banners[0]);
+
+  let containerProps = {};
+
+  if (reachesStatusBar) {
+    containerProps = { className: topmostContainer };
+  } else if (!position) {
+    containerProps = {
+      className: topContainer,
+      style: { [SEARCH_BAR_HEIGHT_PROP]: `${searchBarHeight}px` },
+    };
+  }
 
   return (
-    <div className={reachesStatusBar ? topmostContainer : containerClass}>
+    <div {...containerProps}>
       {banners.map((banner, index) => {
         const hideOnScroll = banner.position === 'topmost' && banner.hideOnScroll;
+        const belowStatusBar = reachesStatusBar && index === 0;
 
         if (!hideOnScroll) {
           return (
@@ -66,7 +124,7 @@ const Banners = ({ banners, position }) => {
               // eslint-disable-next-line react/no-array-index-key
               key={index}
               {...banner}
-              belowStatusBar={reachesStatusBar && index === 0}
+              belowStatusBar={belowStatusBar}
             />
           );
         }
@@ -83,16 +141,14 @@ const Banners = ({ banners, position }) => {
                 scrolledIn,
                 scrolledOut: classNames(scrolledOut, css({
                   '&&': {
-                    // The first banner above the header reaches into the status bar. That part
-                    // stays reserved while the banner is hidden, so the header keeps its place.
-                    marginBottom: reachesStatusBar && index === 0
+                    marginBottom: belowStatusBar
                       ? `calc(${-bannerHeight}px + var(--safe-area-inset-top, 0px))`
                       : -bannerHeight,
                   },
                 })),
               }}
             >
-              <Banner {...banner} belowStatusBar={reachesStatusBar && index === 0} />
+              <Banner {...banner} belowStatusBar={belowStatusBar} />
             </ScrollHeader>
           </div>
         );
