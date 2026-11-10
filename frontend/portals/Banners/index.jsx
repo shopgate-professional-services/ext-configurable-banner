@@ -7,7 +7,7 @@ import { css } from 'glamor';
 import connect from './connector';
 import Banner from './Banner';
 import { BANNER_POSITION_TOPMOST } from '../../constants';
-import { getBannerBackground } from './helpers';
+import { getBannerBackground, isPlainColor } from './helpers';
 import {
   scrolledIn,
   scrolledOut,
@@ -36,9 +36,7 @@ const useFloatingSearchBarHeight = (active) => {
     const root = document.documentElement;
     /** Reads the current height of the floating search bar. */
     const update = () => {
-      const value = parseFloat(
-        getComputedStyle(root).getPropertyValue('--sg-search-bar-floating-height')
-      ) || 0;
+      const value = parseFloat(root.style.getPropertyValue('--sg-search-bar-floating-height')) || 0;
       setHeight(current => Math.max(current, value));
     };
 
@@ -90,16 +88,16 @@ const Banners = ({ banners, position }) => {
     return null;
   }
 
-  // Only a banner with a background of its own colors the status bar. An image, a slider or a
-  // product slider starts below it. The status bar part stays reserved while a banner with
-  // hideOnScroll is hidden, so the header keeps its place.
+  // Only a banner with a plain background color of its own colors the status bar. An image, a
+  // slider, a product slider or a banner with a background image starts below it. The status bar
+  // part stays reserved while a banner with hideOnScroll is hidden, so the header keeps its place.
   const firstContent = banners[0].content || {};
   const reachesStatusBar = position === BANNER_POSITION_TOPMOST
     && !(banners[0].slides && banners[0].slides.length)
     && !(banners[0].productSliderIds && banners[0].productSliderIds.length)
     && !firstContent.imageOnlyUrl
     && !!(firstContent.imageWrappedUrl || firstContent.h2 || firstContent.h3)
-    && !!getBannerBackground(banners[0]);
+    && isPlainColor(getBannerBackground(banners[0]));
 
   let containerProps = {};
 

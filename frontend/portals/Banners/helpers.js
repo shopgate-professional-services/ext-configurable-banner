@@ -17,3 +17,12 @@ export const getBannerBackground = ({ content = {}, wrapperStyles = {} } = {}) =
 
   return ownBackground || cssBackground || null;
 };
+
+/**
+ * Checks whether a CSS background is a plain color. Images and gradients would be cropped
+ * differently in the status bar area and in the banner.
+ * @param {string|null} background The CSS background value.
+ * @returns {boolean}
+ */
+export const isPlainColor = background => !!background
+  && !/(url|gradient|image-set|image)\(/i.test(background);
