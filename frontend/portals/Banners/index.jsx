@@ -2,10 +2,10 @@ import React, { useState, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import { useRoute } from '@shopgate/engage/core';
-import { ScrollHeader } from '@shopgate/engage/components';
 import { css } from 'glamor';
 import connect from './connector';
 import Banner from './Banner';
+import useHiddenOnScroll from './useHiddenOnScroll';
 import { BANNER_POSITION_TOPMOST } from '../../constants';
 import { getBannerBackground, isPlainColor } from './helpers';
 import {
@@ -66,8 +66,12 @@ const Banners = ({ banners, position }) => {
   const [bannerElement, setBannerElement] = useState(null);
   const [bannerHeight, setBannerHeight] = useState(0);
   const searchBarHeight = useFloatingSearchBarHeight(!position && visible && banners.length > 0);
+  const hidden = useHiddenOnScroll(
+    banners.some(banner => banner.position === BANNER_POSITION_TOPMOST && banner.hideOnScroll),
+    visible
+  );
 
-  // Set the height of the banner to adjust the ScrollHeader animation
+  // Set the height of the banner to adjust the hide animation
   useLayoutEffect(() => {
     if (!bannerElement) {
       return undefined;
@@ -113,7 +117,7 @@ const Banners = ({ banners, position }) => {
   return (
     <div {...containerProps}>
       {banners.map((banner, index) => {
-        const hideOnScroll = banner.position === 'topmost' && banner.hideOnScroll;
+        const hideOnScroll = banner.position === BANNER_POSITION_TOPMOST && banner.hideOnScroll;
         const belowStatusBar = reachesStatusBar && index === 0;
 
         if (!hideOnScroll) {
@@ -130,24 +134,21 @@ const Banners = ({ banners, position }) => {
         return (
           // eslint-disable-next-line react/no-array-index-key
           <div key={index} className={overflowWrapper}>
-            <ScrollHeader
+            <div
               ref={setBannerElement}
-              hideOnScroll
-              onlyShowAtTop
-              className={classNames(scrollHeaderStyle)}
-              classes={{
-                scrolledIn,
-                scrolledOut: classNames(scrolledOut, css({
+              className={classNames(scrollHeaderStyle.toString(), hidden
+                ? classNames(scrolledOut.toString(), css({
                   '&&': {
                     marginBottom: belowStatusBar
                       ? `calc(${-bannerHeight}px + var(--safe-area-inset-top, 0px))`
                       : -bannerHeight,
                   },
-                })),
-              }}
+                }).toString())
+                : scrolledIn)}
+              aria-hidden={hidden || undefined}
             >
               <Banner {...banner} belowStatusBar={belowStatusBar} />
-            </ScrollHeader>
+            </div>
           </div>
         );
       })}
