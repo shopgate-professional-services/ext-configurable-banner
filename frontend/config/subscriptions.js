@@ -1,7 +1,9 @@
 import { appDidStart$ } from '@shopgate/engage/core';
 import { fetchConfig } from './actions';
 import { receiveConfig } from './action-creators';
-import { banners } from '../config';
+import extensionConfig from '../config.json';
+
+const { banners } = extensionConfig;
 
 /**
  * Subscriptions

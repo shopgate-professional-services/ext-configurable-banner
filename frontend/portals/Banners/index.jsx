@@ -1,6 +1,5 @@
 import React, { useState, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { useRoute } from '@shopgate/engage/core';
 import { css } from 'glamor';
 import connect from './connector';
@@ -137,15 +136,17 @@ const Banners = ({ banners, position }) => {
           <div key={index} className={overflowWrapper}>
             <div
               ref={setBannerElement}
-              className={classNames(scrollHeaderStyle.toString(), hidden
-                ? classNames(scrolledOut.toString(), css({
+              className={[
+                scrollHeaderStyle.toString(),
+                hidden ? scrolledOut.toString() : scrolledIn,
+                hidden ? css({
                   '&&': {
                     marginBottom: belowStatusBar
                       ? `calc(${-bannerHeight}px + var(--safe-area-inset-top, 0px))`
                       : -bannerHeight,
                   },
-                }).toString())
-                : scrolledIn)}
+                }).toString() : '',
+              ].join(' ').trim()}
               aria-hidden={hidden || undefined}
             >
               <Banner {...banner} belowStatusBar={belowStatusBar} />

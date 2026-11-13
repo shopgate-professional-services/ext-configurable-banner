@@ -41,7 +41,10 @@ const buildSlideContent = (wrapperStyles, contentConfig, link, belowStatusBar = 
   } else if (h3 || h2) {
     content = (
       <div className={css(styles.wrapper(cssBackground, textColor), wrapperStyles)}>
+        {/* The headlines may contain markup that the merchant configured. */}
+        {/* eslint-disable-next-line react/no-danger */}
         {h2 && (<h2 className={styles.h2} dangerouslySetInnerHTML={{ __html: h2 }} />)}
+        {/* eslint-disable-next-line react/no-danger */}
         {h3 && (<h3 className={styles.h3} dangerouslySetInnerHTML={{ __html: h3 }} />)}
       </div>
     );
@@ -134,6 +137,7 @@ Banner.propTypes = {
   belowStatusBar: PropTypes.bool,
   content: PropTypes.shape(),
   link: PropTypes.string,
+  productSliderIds: PropTypes.arrayOf(PropTypes.string),
   sliderSettings: PropTypes.shape(),
   slides: PropTypes.arrayOf(PropTypes.shape()),
   wrapperStyles: PropTypes.shape(),
@@ -143,6 +147,7 @@ Banner.defaultProps = {
   belowStatusBar: false,
   content: {},
   link: null,
+  productSliderIds: null,
   wrapperStyles: {},
   slides: null,
   sliderSettings: null,
