@@ -66,11 +66,6 @@ const Banners = ({ banners, position }) => {
   const [bannerElement, setBannerElement] = useState(null);
   const [bannerHeight, setBannerHeight] = useState(0);
   const searchBarHeight = useFloatingSearchBarHeight(!position && visible && banners.length > 0);
-  const hidden = useHiddenOnScroll(
-    banners.some(banner => banner.position === BANNER_POSITION_TOPMOST && banner.hideOnScroll),
-    visible
-  );
-
   // Set the height of the banner to adjust the hide animation
   useLayoutEffect(() => {
     if (!bannerElement) {
@@ -87,6 +82,12 @@ const Banners = ({ banners, position }) => {
     observer.observe(bannerElement);
     return () => observer.disconnect();
   }, [bannerElement]);
+
+  const hidden = useHiddenOnScroll(
+    banners.some(banner => banner.position === BANNER_POSITION_TOPMOST && banner.hideOnScroll),
+    visible,
+    bannerHeight
+  );
 
   if (!banners.length) {
     return null;
