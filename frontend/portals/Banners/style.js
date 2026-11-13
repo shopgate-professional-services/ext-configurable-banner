@@ -14,7 +14,9 @@ export const scrolledOut = css({
 });
 
 export const scrollHeaderStyle = css({
-  transition: 'transform 0.2s ease,transform 0.2s, margin-bottom 0.2s ease',
+  '&&': {
+    transition: 'transform 0.2s ease, margin-bottom 0.2s ease',
+  },
 });
 
 export const overflowWrapper = css({

@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Position `top`: on pages with the floating header of PWA 7.34 the banners start below the header and the search bar. The space for the search bar stays while the bar hides on scroll, so the content does not move.
 ### Fixed
 - The height of a banner with `hideOnScroll` is measured again when the banner resizes or renders later.
+- A banner with `hideOnScroll` frees its space smoothly instead of in one step, so the page content no longer jumps by the banner height while scrolling (PWA 7.34 overrode the transition of the banner).
 - `wrapperStyles` always win over the default styles of text banners.
 
 ## 1.6.1 2025-06-20
