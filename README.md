@@ -27,8 +27,10 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`, `topmost`
 
-- `hideOnScroll (boolean)` (optional): If true, the banner will be hidden when scrolling down and
-shown again when scrolling up. Default is `false`. Only works if `position` is `topmost`.
+- `hideOnScroll (boolean)` (optional): If true, the banner hides once the page is scrolled down by
+100 px (at least by the height of the banner) and shows again when the page is scrolled back to the
+very top. It stays visible on pages that are too short to stay scrolled after the banner hides.
+Default is `false`. Only works if `position` is `topmost`.
 
 - `link (string)` (optional): Link to the page that should be opened. Relative urls will be opened in the app. Absolute in inAppBrowser
 

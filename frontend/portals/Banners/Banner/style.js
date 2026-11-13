@@ -23,7 +23,12 @@ const h2 = css({
   marginTop: 0,
 });
 
+const statusBarSpacer = css({
+  height: 'var(--safe-area-inset-top, 0px)',
+}).toString();
+
 export default {
+  statusBarSpacer,
   wrapper,
   h2,
   h3,

@@ -4,7 +4,9 @@ import {
   BANNER_RECEIVE_CONFIG,
   BANNER_ERROR_CONFIG,
 } from './constants';
-import { configTTL } from '../config';
+import extensionConfig from '../config.json';
+
+const { configTTL } = extensionConfig;
 
 persistedReducers.set('extensions.@shopgate-project/configurable-banner/config');
 
