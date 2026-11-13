@@ -4,9 +4,10 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [Unreleased]
+## [1.7.0] 2026-11-13
 ### Changed
 - Position `topmost`: the first banner with a plain background color of its own (`cssBackground` or a background in `wrapperStyles`, text or wrapped image) reaches into the status bar area, so the status bar takes the color of the banner. The banner color also fills side margins and rounded corners of that banner. Banners without a background color or with a background image or gradient, image only banners, sliders and product sliders start below the status bar.
+- Frontend tooling updated to the PWA 7.33.2 setup (ESLint 8, `@shopgate/eslint-config` 7.33, tracked lockfile, no own Babel config). No runtime change.
 - Position `top`: on pages with the floating header of PWA 7.34 the banners start below the header and the search bar. The space for the search bar stays while the bar hides on scroll, so the content does not move.
 ### Fixed
 - The height of a banner with `hideOnScroll` is measured again when the banner resizes or renders later.
