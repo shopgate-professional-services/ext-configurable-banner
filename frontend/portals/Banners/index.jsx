@@ -1,20 +1,17 @@
-import React, { useState, useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { useRoute } from '@shopgate/engage/core';
-import { css } from 'glamor';
 import connect from './connector';
 import Banner from './Banner';
+import HideOnScrollBanner from './HideOnScrollBanner';
 import useHiddenOnScroll from './useHiddenOnScroll';
 import { BANNER_POSITION_TOPMOST } from '../../constants';
-import { getBannerBackground, isPlainColor } from './helpers';
+import { getBannerBackground, hasPlainBackgroundColor } from './helpers';
 import {
-  scrolledIn,
-  scrolledOut,
-  scrollHeaderStyle,
-  overflowWrapper,
   topContainer,
   topmostContainer,
   SEARCH_BAR_HEIGHT_PROP,
+  TOP_BACKGROUND_PROP,
 } from './style';
 
 /**
@@ -57,70 +54,87 @@ const useFloatingSearchBarHeight = (active) => {
 };
 
 /**
+ * Tells whether a banner hides on scroll.
+ * @param {Object} banner The banner configuration.
+ * @returns {boolean}
+ */
+const isHideOnScroll = banner => banner.position === BANNER_POSITION_TOPMOST
+  && !!banner.hideOnScroll;
+
+/**
+ * Tells whether a banner is a single box with a plain background color: a text banner or a
+ * wrapped image without background image. Images only, sliders and product sliders are not.
+ * @param {Object} banner The banner configuration.
+ * @returns {boolean}
+ */
+const hasPlainColorBox = (banner) => {
+  const content = banner.content || {};
+  return !(banner.slides && banner.slides.length)
+    && !(banner.productSliderIds && banner.productSliderIds.length)
+    && !content.imageOnlyUrl
+    && !!(content.imageWrappedUrl || content.h2 || content.h3)
+    && hasPlainBackgroundColor(banner);
+};
+
+/**
  * Banners component
  * @return {JSX.Element}
  */
 const Banners = ({ banners, position }) => {
   const { visible = true } = useRoute() || {};
-  const [bannerElement, setBannerElement] = useState(null);
-  const [bannerHeight, setBannerHeight] = useState(0);
+  const [collapseHeights, setCollapseHeights] = useState({});
   const searchBarHeight = useFloatingSearchBarHeight(!position && visible && banners.length > 0);
-  // Set the height of the banner to adjust the hide animation
-  useLayoutEffect(() => {
-    if (!bannerElement) {
-      return undefined;
-    }
 
-    setBannerHeight(bannerElement.offsetHeight);
+  const handleCollapseHeight = useCallback((index, height) => {
+    setCollapseHeights(current => (
+      current[index] === height ? current : {
+        ...current,
+        [index]: height,
+      }
+    ));
+  }, []);
 
-    if (typeof ResizeObserver !== 'function') {
-      return undefined;
-    }
+  // The page loses the space of all banners with hideOnScroll together when they hide.
+  const collapseHeight = Object.values(collapseHeights).reduce((sum, height) => sum + height, 0);
 
-    const observer = new ResizeObserver(() => setBannerHeight(bannerElement.offsetHeight));
-    observer.observe(bannerElement);
-    return () => observer.disconnect();
-  }, [bannerElement]);
-
-  const hidden = useHiddenOnScroll(
-    banners.some(banner => banner.position === BANNER_POSITION_TOPMOST && banner.hideOnScroll),
-    visible,
-    bannerHeight
-  );
+  const hidden = useHiddenOnScroll(banners.some(isHideOnScroll), visible, collapseHeight);
 
   if (!banners.length) {
     return null;
   }
 
-  // Only a banner with a plain background color of its own colors the status bar. An image, a
-  // slider, a product slider or a banner with a background image starts below it. The status bar
-  // part stays reserved while a banner with hideOnScroll is hidden, so the header keeps its place.
-  const firstContent = banners[0].content || {};
+  // The first topmost banner reaches into the status bar only with fillStatusBar, and only text
+  // banners and wrapped images with a plain background color can. The status bar part stays
+  // reserved while a banner with hideOnScroll is hidden, so the header keeps its place.
+  const firstHasPlainColor = hasPlainColorBox(banners[0]);
   const reachesStatusBar = position === BANNER_POSITION_TOPMOST
-    && !(banners[0].slides && banners[0].slides.length)
-    && !(banners[0].productSliderIds && banners[0].productSliderIds.length)
-    && !firstContent.imageOnlyUrl
-    && !!(firstContent.imageWrappedUrl || firstContent.h2 || firstContent.h3)
-    && isPlainColor(getBannerBackground(banners[0]));
+    && banners[0].fillStatusBar === true
+    && firstHasPlainColor;
 
   let containerProps = {};
 
   if (reachesStatusBar) {
     containerProps = { className: topmostContainer };
   } else if (!position) {
+    // Under the floating header, the color of the first banner fills the space behind the header
+    // and the search bar, so the header doesn't stand on the page background.
     containerProps = {
       className: topContainer,
-      style: { [SEARCH_BAR_HEIGHT_PROP]: `${searchBarHeight}px` },
+      style: {
+        [SEARCH_BAR_HEIGHT_PROP]: `${searchBarHeight}px`,
+        ...(firstHasPlainColor && {
+          [TOP_BACKGROUND_PROP]: getBannerBackground(banners[0]),
+        }),
+      },
     };
   }
 
   return (
     <div {...containerProps}>
       {banners.map((banner, index) => {
-        const hideOnScroll = banner.position === BANNER_POSITION_TOPMOST && banner.hideOnScroll;
         const belowStatusBar = reachesStatusBar && index === 0;
 
-        if (!hideOnScroll) {
+        if (!isHideOnScroll(banner)) {
           return (
             <Banner
               // eslint-disable-next-line react/no-array-index-key
@@ -132,26 +146,15 @@ const Banners = ({ banners, position }) => {
         }
 
         return (
-          // eslint-disable-next-line react/no-array-index-key
-          <div key={index} className={overflowWrapper}>
-            <div
-              ref={setBannerElement}
-              className={[
-                scrollHeaderStyle.toString(),
-                hidden ? scrolledOut.toString() : scrolledIn,
-                hidden ? css({
-                  '&&': {
-                    marginBottom: belowStatusBar
-                      ? `calc(${-bannerHeight}px + var(--safe-area-inset-top, 0px))`
-                      : -bannerHeight,
-                  },
-                }).toString() : '',
-              ].join(' ').trim()}
-              aria-hidden={hidden || undefined}
-            >
-              <Banner {...banner} belowStatusBar={belowStatusBar} />
-            </div>
-          </div>
+          <HideOnScrollBanner
+            // eslint-disable-next-line react/no-array-index-key
+            key={index}
+            banner={banner}
+            belowStatusBar={belowStatusBar}
+            hidden={hidden}
+            index={index}
+            onCollapseHeight={handleCollapseHeight}
+          />
         );
       })}
     </div>

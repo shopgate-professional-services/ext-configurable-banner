@@ -28,9 +28,15 @@ export const topmostContainer = css({
 }).toString();
 
 export const SEARCH_BAR_HEIGHT_PROP = '--configurable-banner-search-bar-height';
+export const TOP_BACKGROUND_PROP = '--configurable-banner-top-background';
+
+const floatingHeaderSpace = `calc(var(--app-bar-height, 0px) + var(${SEARCH_BAR_HEIGHT_PROP}, 0px))`;
 
 export const topContainer = css({
   '#AppHeader[data-overlay] ~ #AppContent &': {
-    paddingTop: `calc(var(--app-bar-height, 0px) + var(${SEARCH_BAR_HEIGHT_PROP}, 0px))`,
+    paddingTop: floatingHeaderSpace,
+    backgroundImage: `linear-gradient(var(${TOP_BACKGROUND_PROP}), var(${TOP_BACKGROUND_PROP}))`,
+    backgroundSize: `100% ${floatingHeaderSpace}`,
+    backgroundRepeat: 'no-repeat',
   },
 }).toString();

@@ -99,9 +99,13 @@ Do not copy Knowledge Base content into this file. Keep AGENTS.md focused on thi
   things; import the settings with the `.json` extension.
 - `@shopgate/engage` and the other aliased packages are provided by the PWA theme at runtime;
   the versions in `frontend/package.json` only serve lint and the editor.
-- `topmost` banners reach into the status bar area only under the conditions in
-  `frontend/portals/Banners/index.jsx` (`reachesStatusBar`); the `top` position reserves space
-  for the floating search bar via `--sg-search-bar-floating-height`.
+- The first `topmost` banner reaches into the status bar area only with `fillStatusBar` and under
+  the conditions in `frontend/portals/Banners/index.jsx` (`reachesStatusBar`). The status bar icon
+  color still follows the header color. The `top` position reserves space for the floating header
+  and search bar (`--app-bar-height`, `--sg-search-bar-floating-height`) and fills it with the
+  color of the first banner when it is a plain color.
+- Each `hideOnScroll` banner measures the height it frees (`HideOnScrollBanner.jsx`, without the
+  status bar spacer); `useHiddenOnScroll` gets the sum.
 
 ## Editing Guidelines for AI Agents
 

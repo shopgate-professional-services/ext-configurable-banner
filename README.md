@@ -32,6 +32,21 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 very top. It stays visible on pages that are too short to stay scrolled after the banner hides.
 Default is `false`. Only works if `position` is `topmost`.
 
+- `fillStatusBar (boolean)` (optional): If true, the banner reaches into the status bar area, so the
+status bar shows the color of the banner instead of the header color. Default is `false`. Only works
+for the first banner with `position` `topmost`, and only for a text banner or a wrapped image
+(`imageWrappedUrl`) whose background is a plain color (`cssBackground` or a background color in
+`wrapperStyles`, no image or gradient).
+The app picks light or dark status bar icons from the header color, not from the banner. Choose a
+banner color with the same brightness as the header: a dark banner under a dark header, a light
+banner under a light header. Check the result in the app on iOS and Android.
+
+- Banners with `position` `top` on pages with the floating header (PWA 7.34 and later) start below
+the header and the search bar. When the first of them is a text banner or a wrapped image with a
+plain background color, that color fills the space behind the header, so the logo and the header
+buttons stand on the banner color. Choose a banner color that the logo and the buttons are readable
+on.
+
 - `link (string)` (optional): Link to the page that should be opened. Relative urls will be opened in the app. Absolute in inAppBrowser
 
 - `content (Object)`: Object for the content for the banner. It can look like option A, B or C.

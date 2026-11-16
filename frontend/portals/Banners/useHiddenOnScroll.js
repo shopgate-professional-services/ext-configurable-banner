@@ -1,12 +1,10 @@
 import {
-  createContext, useContext, useEffect, useRef, useState,
+  useContext, useEffect, useRef, useState,
 } from 'react';
 import { ViewContext } from '@shopgate/engage/components';
 
 // Scroll position from which a banner with hideOnScroll hides.
 export const HIDE_OFFSET = 100;
-
-const FallbackContext = createContext(null);
 
 /**
  * Reads the scroll position and the maximum scroll position of the window or a scroll container.
@@ -42,7 +40,7 @@ const getScrollState = (target) => {
  * @returns {boolean}
  */
 const useHiddenOnScroll = (active, listening, collapseHeight) => {
-  const { contentRef } = useContext(ViewContext || FallbackContext) || {};
+  const { contentRef } = useContext(ViewContext) || {};
   const target = (contentRef && contentRef.current) || window;
   const [hidden, setHidden] = useState(false);
   const collapseRef = useRef(collapseHeight);
