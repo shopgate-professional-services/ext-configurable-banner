@@ -5,14 +5,16 @@ import { useTheme } from '@shopgate/engage/core';
 import { Swiper, Link } from '@shopgate/engage/components';
 import styles from './style';
 import connect from './connector';
+import { getBannerBackground } from '../helpers';
 
 /**
  * @param {Object} wrapperStyles wrapperStyles
  * @param {Object} contentConfig contentConfig
  * @param {string} link link
+ * @param {boolean} belowStatusBar Whether the banner reaches into the status bar area
  * @returns {JSX.Element}
  */
-const buildSlideContent = (wrapperStyles, contentConfig, link) => {
+const buildSlideContent = (wrapperStyles, contentConfig, link, belowStatusBar = false) => {
   let content = null;
   const {
     imageOnlyUrl,
@@ -38,8 +40,11 @@ const buildSlideContent = (wrapperStyles, contentConfig, link) => {
     );
   } else if (h3 || h2) {
     content = (
-      <div className={`${styles.wrapper(cssBackground, textColor)} ${css(wrapperStyles)}`}>
+      <div className={css(styles.wrapper(cssBackground, textColor), wrapperStyles)}>
+        {/* The headlines may contain markup that the merchant configured. */}
+        {/* eslint-disable-next-line react/no-danger */}
         {h2 && (<h2 className={styles.h2} dangerouslySetInnerHTML={{ __html: h2 }} />)}
+        {/* eslint-disable-next-line react/no-danger */}
         {h3 && (<h3 className={styles.h3} dangerouslySetInnerHTML={{ __html: h3 }} />)}
       </div>
     );
@@ -50,14 +55,31 @@ const buildSlideContent = (wrapperStyles, contentConfig, link) => {
   }
 
   if (link) {
-    return (
+    content = (
       <Link href={link} aria-label={altText} tabIndex={0}>
         {content}
       </Link>
     );
   }
 
-  return content;
+  if (!belowStatusBar) {
+    return content;
+  }
+
+  // The spacer sits above the content, so the layout of the banner itself stays untouched.
+  return (
+    <div
+      className={css({
+        background: getBannerBackground({
+          content: contentConfig,
+          wrapperStyles,
+        }),
+      }).toString()}
+    >
+      <div className={styles.statusBarSpacer} />
+      {content}
+    </div>
+  );
 };
 
 /**
@@ -72,6 +94,7 @@ const Banner = ({
   sliderSettings,
   productSliderIds,
   fetchProductsById,
+  belowStatusBar,
 }) => {
   const { ProductSlider } = useTheme();
 
@@ -106,21 +129,25 @@ const Banner = ({
   }
 
   // Show banner as simple box
-  return buildSlideContent(wrapperStyles, contentConfig, link);
+  return buildSlideContent(wrapperStyles, contentConfig, link, belowStatusBar);
 };
 
 Banner.propTypes = {
   fetchProductsById: PropTypes.func.isRequired,
+  belowStatusBar: PropTypes.bool,
   content: PropTypes.shape(),
   link: PropTypes.string,
+  productSliderIds: PropTypes.arrayOf(PropTypes.string),
   sliderSettings: PropTypes.shape(),
   slides: PropTypes.arrayOf(PropTypes.shape()),
   wrapperStyles: PropTypes.shape(),
 };
 
 Banner.defaultProps = {
+  belowStatusBar: false,
   content: {},
   link: null,
+  productSliderIds: null,
   wrapperStyles: {},
   slides: null,
   sliderSettings: null,
