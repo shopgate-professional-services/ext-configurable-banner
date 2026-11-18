@@ -11,8 +11,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 - Position `top`: on pages with the floating header of PWA 7.34 the banners start below the header and the search bar. When the first banner has a plain background color, that color fills the space behind the header. The space for the search bar stays while the bar hides on scroll, so the content does not move.
 ### Fixed
 - The height of a banner with `hideOnScroll` is measured again when the banner resizes or renders later. Each of several banners with `hideOnScroll` frees its own height, so banners of different heights hide without leaving a gap.
-- A banner with `hideOnScroll` hides and shows reliably at any scroll speed. It follows the scroll position of the view itself (hide from 100 px, show at the very top) instead of the throttled scroll events of `ScrollHeader`, which missed fast scrolling to the bottom and the last scroll event at the top.
-- A banner with `hideOnScroll` no longer makes the page jump on iOS when it hides or shows. The page content keeps the space of the banner at its top and lies under the banner, so the scroll area of the page stays in place while the banner slides away, the same way the search bar of PWA 7.34 hides.
+- A banner with `hideOnScroll` hides and shows reliably at any scroll speed. It follows the scroll position of the view itself (hidden from 100 px, shown above) instead of the throttled scroll events of `ScrollHeader`, which missed fast scrolling to the bottom and the last scroll event at the top.
+- A banner with `hideOnScroll` no longer makes the page jump on iOS when it hides or shows. The page content keeps the space of the banner at its top and lies under the banner, so the scroll area of the page stays in place while the banner slides away, the same way the search bar of PWA 7.34 hides. Scrolling up, the banner is back before the page reaches the top, so it does not appear while iOS bounces there.
 - `wrapperStyles` always win over the default styles of text banners.
 
 ## 1.6.1 2025-06-20

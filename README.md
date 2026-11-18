@@ -28,7 +28,7 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 - `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`, `topmost`
 
 - `hideOnScroll (boolean)` (optional): If true, the banner hides once the page is scrolled down by
-100 px and shows again when the page is scrolled back to the very top. The page content keeps the
+100 px and shows again when the page is scrolled back above 100 px. The page content keeps the
 space of the banner at its top, so it doesn't move when the banner hides or shows.
 Default is `false`. Only works if `position` is `topmost`.
 
