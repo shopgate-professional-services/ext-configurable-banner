@@ -1,4 +1,6 @@
-import React, { useState, useLayoutEffect, useCallback } from 'react';
+import React, {
+  useState, useLayoutEffect, useCallback, useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 import { useRoute } from '@shopgate/engage/core';
 import connect from './connector';
@@ -10,6 +12,9 @@ import { getBannerBackground, hasPlainBackgroundColor } from './helpers';
 import {
   topContainer,
   topmostContainer,
+  CONTENT_SHIFT_DURATION_PROP,
+  CONTENT_SHIFT_PROP,
+  RESERVED_SPACE_PROP,
   SEARCH_BAR_HEIGHT_PROP,
   TOP_BACKGROUND_PROP,
 } from './style';
@@ -51,6 +56,40 @@ const useFloatingSearchBarHeight = (active) => {
   }, [active]);
 
   return height;
+};
+
+/**
+ * Lets the view content lie under the topmost banners with hideOnScroll and reserve their space
+ * at its top, so hiding them doesn't move the scroll container of the view (see style.js).
+ * @param {boolean} active Whether the banners of the visible route hide on scroll.
+ * @param {number} height The height the banners free when they hide.
+ * @param {boolean} hidden Whether the banners are hidden.
+ */
+const useReservedContentSpace = (active, height, hidden) => {
+  const appliedHeight = useRef(null);
+
+  useLayoutEffect(() => {
+    if (!active) {
+      appliedHeight.current = null;
+      return undefined;
+    }
+
+    // Only hiding and showing moves the content along with the banners. A new height
+    // (measuring, resizing) applies at once, the same as the banner does without hideOnScroll.
+    const animate = appliedHeight.current === height;
+    appliedHeight.current = height;
+
+    const { style } = document.documentElement;
+    style.setProperty(RESERVED_SPACE_PROP, `${height}px`);
+    style.setProperty(CONTENT_SHIFT_PROP, `${hidden ? 0 : height}px`);
+    style.setProperty(CONTENT_SHIFT_DURATION_PROP, animate ? '0.2s' : '0s');
+
+    return () => {
+      style.removeProperty(RESERVED_SPACE_PROP);
+      style.removeProperty(CONTENT_SHIFT_PROP);
+      style.removeProperty(CONTENT_SHIFT_DURATION_PROP);
+    };
+  }, [active, height, hidden]);
 };
 
 /**
@@ -97,7 +136,9 @@ const Banners = ({ banners, position }) => {
   // The page loses the space of all banners with hideOnScroll together when they hide.
   const collapseHeight = Object.values(collapseHeights).reduce((sum, height) => sum + height, 0);
 
-  const hidden = useHiddenOnScroll(banners.some(isHideOnScroll), visible, collapseHeight);
+  const hasHideOnScroll = banners.some(isHideOnScroll);
+  const hidden = useHiddenOnScroll(hasHideOnScroll, visible);
+  useReservedContentSpace(hasHideOnScroll && visible, collapseHeight, hidden);
 
   if (!banners.length) {
     return null;

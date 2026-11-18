@@ -105,7 +105,13 @@ Do not copy Knowledge Base content into this file. Keep AGENTS.md focused on thi
   and search bar (`--app-bar-height`, `--sg-search-bar-floating-height`) and fills it with the
   color of the first banner when it is a plain color.
 - Each `hideOnScroll` banner measures the height it frees (`HideOnScrollBanner.jsx`, without the
-  status bar spacer); `useHiddenOnScroll` gets the sum.
+  status bar spacer); `Banners/index.jsx` sums them up.
+- Below a fixed (not floating) header, hiding a banner must not move the scroll container of the
+  view: iOS applies such a move in one step during momentum scrolling and bounce, and the page
+  jumps. The view content therefore lies under the banners (`#AppContent` margin) and reserves
+  their height at the top of the scrolled content (`::before`), set via CSS custom properties in
+  `useReservedContentSpace`. The header shrinks and the margin grows with the same transition, so
+  the scroll container stays in place. Chrome hides such jumps, check on an iPhone.
 
 ## Editing Guidelines for AI Agents
 
