@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [1.7.0] 2026-11-13
+## [2.0.0-beta.1] 2026-11-25
 ### Changed
 - **Breaking:** requires PWA 7.35.0 or later for `useViewScroll` (`peerDependencies`: `@shopgate/engage` `>=7.35.0-beta.4`, so the 7.35.0 betas work too).
 - New option `fillStatusBar` for the first banner with position `topmost` (off by default): a text banner or wrapped image with a plain background color (`cssBackground` or a background color in `wrapperStyles`) reaches into the status bar area, so the status bar takes the color of the banner. The banner color also fills side margins and rounded corners of that banner. Banners without the option, without a background color or with a background image or gradient anywhere, image only banners, sliders and product sliders start below the status bar.
