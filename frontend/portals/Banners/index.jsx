@@ -1,23 +1,38 @@
 import React, {
-  useState, useLayoutEffect, useCallback, useRef,
+  useState, useLayoutEffect, useCallback, useRef, useContext,
 } from 'react';
 import PropTypes from 'prop-types';
 import { useRoute } from '@shopgate/engage/core';
+import { ViewContext } from '@shopgate/engage/components';
+import { useViewScroll } from '@shopgate/engage/core/hooks';
+import { makeStyles } from '@shopgate/engage/styles';
 import connect from './connector';
 import Banner from './Banner';
 import HideOnScrollBanner from './HideOnScrollBanner';
-import useHiddenOnScroll from './useHiddenOnScroll';
 import { BANNER_POSITION_TOPMOST } from '../../constants';
 import { getBannerBackground, hasPlainBackgroundColor } from './helpers';
 import {
-  topContainer,
-  topmostContainer,
-  CONTENT_SHIFT_DURATION_PROP,
-  CONTENT_SHIFT_PROP,
+  FLOATING_HEADER_SPACE,
+  HEADER_SHIFT_DURATION_PROP,
+  HIDDEN_ATTRIBUTE,
   RESERVED_SPACE_PROP,
   SEARCH_BAR_HEIGHT_PROP,
   TOP_BACKGROUND_PROP,
 } from './style';
+
+const useStyles = makeStyles()({
+  topmostContainer: {
+    marginTop: 'calc(-1 * var(--safe-area-inset-top, 0px))',
+  },
+  topContainer: {
+    '#AppHeader[data-overlay] ~ #AppContent &': {
+      paddingTop: FLOATING_HEADER_SPACE,
+      backgroundImage: `linear-gradient(var(${TOP_BACKGROUND_PROP}), var(${TOP_BACKGROUND_PROP}))`,
+      backgroundSize: `100% ${FLOATING_HEADER_SPACE}`,
+      backgroundRepeat: 'no-repeat',
+    },
+  },
+});
 
 /**
  * Keeps the largest height the floating search bar had while the page was visible. The PWA sets
@@ -59,13 +74,13 @@ const useFloatingSearchBarHeight = (active) => {
 };
 
 /**
- * Lets the view content lie under the topmost banners with hideOnScroll and reserve their space
- * at its top, so hiding them doesn't move the scroll container of the view (see style.js).
+ * Lets the content of the visible route lie under the topmost banners with hideOnScroll, and
+ * slides the header up by their height while they are hidden (see style.js).
  * @param {boolean} active Whether the banners of the visible route hide on scroll.
  * @param {number} height The height the banners free when they hide.
  * @param {boolean} hidden Whether the banners are hidden.
  */
-const useReservedContentSpace = (active, height, hidden) => {
+const useHeaderShift = (active, height, hidden) => {
   const appliedHeight = useRef(null);
 
   useLayoutEffect(() => {
@@ -74,22 +89,53 @@ const useReservedContentSpace = (active, height, hidden) => {
       return undefined;
     }
 
-    // Only hiding and showing moves the content along with the banners. A new height
-    // (measuring, resizing) applies at once, the same as the banner does without hideOnScroll.
+    // Only hiding and showing slides the header. A new height (measuring, resizing) applies at
+    // once, the same as the banner does without hideOnScroll.
     const animate = appliedHeight.current === height;
     appliedHeight.current = height;
 
-    const { style } = document.documentElement;
-    style.setProperty(RESERVED_SPACE_PROP, `${height}px`);
-    style.setProperty(CONTENT_SHIFT_PROP, `${hidden ? 0 : height}px`);
-    style.setProperty(CONTENT_SHIFT_DURATION_PROP, animate ? '0.2s' : '0s');
+    const root = document.documentElement;
+    root.style.setProperty(RESERVED_SPACE_PROP, `${height}px`);
+    root.style.setProperty(HEADER_SHIFT_DURATION_PROP, animate ? '0.2s' : '0s');
+    root.toggleAttribute(HIDDEN_ATTRIBUTE, hidden);
 
     return () => {
-      style.removeProperty(RESERVED_SPACE_PROP);
-      style.removeProperty(CONTENT_SHIFT_PROP);
-      style.removeProperty(CONTENT_SHIFT_DURATION_PROP);
+      root.style.removeProperty(RESERVED_SPACE_PROP);
+      root.style.removeProperty(HEADER_SHIFT_DURATION_PROP);
+      root.removeAttribute(HIDDEN_ATTRIBUTE);
     };
   }, [active, height, hidden]);
+};
+
+/**
+ * Reserves the space of the banners at the top of the scroll container of their own view. When
+ * the banners turn inactive, the space goes one frame later and stays when the view unmounts
+ * (see style.js).
+ * @param {boolean} active Whether the banners of the view hide on scroll.
+ * @param {number} height The height the banners free when they hide.
+ */
+const useViewReservedSpace = (active, height) => {
+  const { contentRef } = useContext(ViewContext);
+  const content = contentRef && contentRef.current;
+  const activeRef = useRef(active);
+
+  useLayoutEffect(() => {
+    activeRef.current = active;
+
+    if (!active || !content || content === window) {
+      return undefined;
+    }
+
+    content.style.setProperty(RESERVED_SPACE_PROP, `${height}px`);
+
+    return () => {
+      requestAnimationFrame(() => {
+        if (!activeRef.current) {
+          content.style.removeProperty(RESERVED_SPACE_PROP);
+        }
+      });
+    };
+  }, [active, content, height]);
 };
 
 /**
@@ -120,6 +166,7 @@ const hasPlainColorBox = (banner) => {
  * @return {JSX.Element}
  */
 const Banners = ({ banners, position }) => {
+  const { classes } = useStyles();
   const { visible = true } = useRoute() || {};
   const [collapseHeights, setCollapseHeights] = useState({});
   const searchBarHeight = useFloatingSearchBarHeight(!position && visible && banners.length > 0);
@@ -137,8 +184,11 @@ const Banners = ({ banners, position }) => {
   const collapseHeight = Object.values(collapseHeights).reduce((sum, height) => sum + height, 0);
 
   const hasHideOnScroll = banners.some(isHideOnScroll);
-  const hidden = useHiddenOnScroll(hasHideOnScroll, visible);
-  useReservedContentSpace(hasHideOnScroll && visible, collapseHeight, hidden);
+  // No `visible` here: the hook pauses while the route is hidden and keeps `scrolled`, so the
+  // header is in place on return.
+  const { scrolled: hidden } = useViewScroll({ enabled: hasHideOnScroll });
+  useHeaderShift(hasHideOnScroll && visible, collapseHeight, hidden);
+  useViewReservedSpace(hasHideOnScroll, collapseHeight);
 
   if (!banners.length) {
     return null;
@@ -155,12 +205,12 @@ const Banners = ({ banners, position }) => {
   let containerProps = {};
 
   if (reachesStatusBar) {
-    containerProps = { className: topmostContainer };
+    containerProps = { className: classes.topmostContainer };
   } else if (!position) {
     // Under the floating header, the color of the first banner fills the space behind the header
     // and the search bar, so the header doesn't stand on the page background.
     containerProps = {
-      className: topContainer,
+      className: classes.topContainer,
       style: {
         [SEARCH_BAR_HEIGHT_PROP]: `${searchBarHeight}px`,
         ...(firstHasPlainColor && {

@@ -1,14 +1,20 @@
 import React, { useState, useLayoutEffect, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { css } from 'glamor';
+import { makeStyles } from '@shopgate/engage/styles';
 import Banner from './Banner';
-import bannerStyles from './Banner/style';
-import {
-  scrolledIn,
-  scrolledOut,
-  scrollHeaderStyle,
-  overflowWrapper,
-} from './style';
+
+const useStyles = makeStyles()({
+  overflowWrapper: {
+    overflow: 'hidden',
+  },
+  hideOnScroll: {
+    transition: 'transform 0.2s ease',
+    transform: 'translateY(0%)',
+  },
+  scrolledOut: {
+    transform: 'translateY(-100%)',
+  },
+});
 
 /**
  * Measures the height a banner frees when it hides. The status bar spacer of a banner that
@@ -17,7 +23,7 @@ import {
  * @returns {number}
  */
 const getCollapseHeight = (element) => {
-  const spacer = element.querySelector(`.${bannerStyles.statusBarSpacer}`);
+  const spacer = element.querySelector('[data-configurable-banner-status-bar-spacer]');
   return Math.max(0, element.offsetHeight - (spacer ? spacer.offsetHeight : 0));
 };
 
@@ -30,6 +36,7 @@ const getCollapseHeight = (element) => {
 const HideOnScrollBanner = ({
   banner, belowStatusBar, hidden, index, onCollapseHeight,
 }) => {
+  const { classes, cx } = useStyles();
   const [element, setElement] = useState(null);
   const [collapseHeight, setCollapseHeight] = useState(0);
 
@@ -49,21 +56,17 @@ const HideOnScrollBanner = ({
     return () => observer.disconnect();
   }, [element]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     onCollapseHeight(index, collapseHeight);
   }, [collapseHeight, index, onCollapseHeight]);
 
   useEffect(() => () => onCollapseHeight(index, 0), [index, onCollapseHeight]);
 
   return (
-    <div className={overflowWrapper}>
+    <div className={classes.overflowWrapper}>
       <div
         ref={setElement}
-        className={[
-          scrollHeaderStyle.toString(),
-          hidden ? scrolledOut.toString() : scrolledIn,
-          hidden ? css({ '&&': { marginBottom: -collapseHeight } }).toString() : '',
-        ].join(' ').trim()}
+        className={cx(classes.hideOnScroll, hidden && classes.scrolledOut)}
         aria-hidden={hidden || undefined}
       >
         <Banner {...banner} belowStatusBar={belowStatusBar} />

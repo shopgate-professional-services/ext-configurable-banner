@@ -25,7 +25,8 @@ in `README.md`, examples in `demo/index.md`.
 
 - Frontend (`frontend/`): React 17 components and Redux (reducer, subscriptions, `reselect`
   selectors, `react-redux` connectors), built by the PWA theme's webpack; no own build.
-- Styles: `glamor` (`css(...)`).
+- Styles: `makeStyles`, `css` and `injectGlobal` from `@shopgate/engage/styles` (tss-react/emotion).
+  `makeStyles` sits in the component file that uses it; merchant `wrapperStyles` go through `css(...)`.
 - Backend (`extension/`): Node.js pipeline step (CommonJS), HTTP via `request`.
 - Tooling: npm; ESLint with `@shopgate/eslint-config` (frontend) and `standard` (backend).
 - No tests in the repository.
@@ -62,8 +63,9 @@ Running the extension in the app or browser goes through the Shopgate Developer 
 - The reducer (`frontend/config/reducers.js`) is persisted via `persistedReducers`.
 - Banner selection by route, position and IDs: `frontend/portals/Banners/selectors.js`. Route
   params are hex-decoded with `hex2bin`, except for CMS page routes (`PAGE_PATTERN`).
-- `hideOnScroll` logic: `frontend/portals/Banners/useHiddenOnScroll.js` (follows the scroll
-  target from `ViewContext`, falls back to `window`).
+- `hideOnScroll` logic: `useViewScroll` from `@shopgate/engage/core/hooks` in
+  `frontend/portals/Banners/index.jsx` (scroll position of the view once per frame, scroll
+  offset of the theme).
 
 ## Internal Knowledge Base
 
@@ -99,6 +101,10 @@ Do not copy Knowledge Base content into this file. Keep AGENTS.md focused on thi
   things; import the settings with the `.json` extension.
 - `@shopgate/engage` and the other aliased packages are provided by the PWA theme at runtime;
   the versions in `frontend/package.json` only serve lint and the editor.
+- Minimum PWA version: 7.35.0, for `useViewScroll` of `@shopgate/engage/core/hooks`. Until
+  7.35.0 is published, `peerDependencies` allows `>=7.35.0-beta.4` and `devDependencies` pins
+  `7.35.0-beta.4`. Then they move to `>=7.35.0` and `^7.35.0` (see
+  `docs/extension-housekeeping.md` of the PWA).
 - The first `topmost` banner reaches into the status bar area only with `fillStatusBar` and under
   the conditions in `frontend/portals/Banners/index.jsx` (`reachesStatusBar`). The status bar icon
   color still follows the header color. The `top` position reserves space for the floating header
@@ -106,12 +112,11 @@ Do not copy Knowledge Base content into this file. Keep AGENTS.md focused on thi
   color of the first banner when it is a plain color.
 - Each `hideOnScroll` banner measures the height it frees (`HideOnScrollBanner.jsx`, without the
   status bar spacer); `Banners/index.jsx` sums them up.
-- Below a fixed (not floating) header, hiding a banner must not move the scroll container of the
-  view: iOS applies such a move in one step during momentum scrolling and bounce, and the page
-  jumps. The view content therefore lies under the banners (`#AppContent` margin) and reserves
-  their height at the top of the scrolled content (`::before`), set via CSS custom properties in
-  `useReservedContentSpace`. The header shrinks and the margin grows with the same transition, so
-  the scroll container stays in place. Chrome hides such jumps, check on an iPhone.
+- Hiding a `hideOnScroll` banner changes no layout: the header slides with a `transform`
+  (`useHeaderShift`) and the content keeps the reserved space (`useViewReservedSpace`). The
+  extension owns `transform` and `transition` of `#AppHeader`. The reasons (iOS jumps and
+  stutters, Android scroll anchoring when leaving a route) are in the comments of
+  `frontend/portals/Banners/style.js`. Chrome hides the iOS problems, check on an iPhone.
 
 ## Editing Guidelines for AI Agents
 

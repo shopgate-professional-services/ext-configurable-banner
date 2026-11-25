@@ -10,6 +10,9 @@ Adds one or multiple banners to top or bottom of the pages. A banner can be an i
 - Background images, colors, gradients
 - Fetch banners config from external endpoint
 
+## Requirements
+- Shopgate PWA 7.35.0 or later
+
 ## Demo & Examples
 [See here](demo/index.md)
 
@@ -27,8 +30,9 @@ Examples: `/category/:categoryId`, `/item/:productId`, `/category`, `/`, `/cart`
 
 - `position (string)` (optional): Position where the banner should be shown. Available positions `top` (default), `bottom`, `topmost`
 
-- `hideOnScroll (boolean)` (optional): If true, the banner hides once the page is scrolled down by
-100 px and shows again when the page is scrolled back above 100 px. The page content keeps the
+- `hideOnScroll (boolean)` (optional): If true, the banner hides once the page is scrolled down
+past the scroll offset of the theme (100 px by default) and shows again when the page is scrolled
+back above it. The page content keeps the
 space of the banner at its top, so it doesn't move when the banner hides or shows.
 Default is `false`. Only works if `position` is `topmost`.
 
@@ -51,7 +55,7 @@ on.
 
 - `content (Object)`: Object for the content for the banner. It can look like option A, B or C.
 
-- `wrapperStyles (Object)` (optional): css glamor style object that gets applied to wrapper around the banner
+- `wrapperStyles (Object)` (optional): CSS-in-JS style object (camelCase properties; pseudo classes and media queries as nested keys) that gets applied to the wrapper around the banner
 
 - `productSliderIds (Array)` (optional): Array of productsIds for ProductSlider.
 Example:
